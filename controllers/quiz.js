@@ -21,7 +21,7 @@ exports.load = (req, res, next, quizId) => {
 // GET /quizzes
 exports.index = (req, res, next) => {
 
-    models.quiz.find
+    models.quiz
     .then(quizzes => {
         res.render('quizzes/index.ejs', {quizzes});
     })
@@ -163,15 +163,15 @@ exports.randomplay = (req, res, next) => {
 
 
     //Si quiz no definida en sesscion,desde 0
-    if(req.session.quizzes === undefined) {
+    if(req.session.ramdonplay === undefined) {
         res.session.nota = 0;
 
         models.quiz.findAll()
-            .then(quiz => {
-                req.session.quizzes = quiz;
+            .then(quizzes => {
+                req.session.ramdonplay = quizzes;
                 req.session.sid = Math.floor(Math.random() * toBeResolved.length);
-                res.render('quizzes/randomplay', {
-                    quiz: req.session.quizzes[req.session.sid],
+                res.render('quizzes/random_play', {
+                    quiz: req.session.ramdonplay[req.session.sid],
                     score: req.session.nota
                 });
 
@@ -181,8 +181,8 @@ exports.randomplay = (req, res, next) => {
     else {
 
         req.session.sid = Math.floor(Math.random() * toBeResolved.length);
-        res.render('quizzes/randomplay', {
-            quiz: req.session.quizzes[req.session.sid],
+        res.render('quizzes/random_play', {
+            quiz: req.session.ramdonplay[req.session.sid],
             score: req.session.nota
         });
 
@@ -195,8 +195,42 @@ exports.randomplay = (req, res, next) => {
 
 exports.randomcheck = (req, res, next) => {
     let result = false;
+    let nota = -1;
 
-    models.quiz.find
+
+
+    if(trimm(req.query.answer) === trimm(req.session.ramdonplay[req.session.sid]).answer){
+        req.session.nota++;
+        nota = req.session.nota;
+        result = true;
+        req.session.ramdonplay.splice(req.session.sid, 1);
+
+        if(req.session.ramdonplay === undefined) {
+            res.session.ramdonplay.splice(0, res.session.ramdonplay.length);
+            //exito
+            res.render('quizzes/random_nomore', {
+                score: req.session.nota
+            });
+        }
+        else{
+                res.render('quizzes/random_result', {
+                    score: nota,
+                    result: result,
+                    answer: req.session.ramdonplay[req.session.sid].answer
+                });
+        }
+    }
+    else{
+        nota = req.session.nota;
+        res.session.nota = 0;
+        res.session.ramdonplay.splice(0, res.session.ramdonplay.length);
+
+        res.render('quizzes/random_result', {
+            score: nota,
+            result: result,
+            answer: req.session.ramdonplay[req.session.sid].answer
+        });
+    }
 
 
 
