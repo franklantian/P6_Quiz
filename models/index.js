@@ -3,13 +3,11 @@ const path = require('path');
 // Load ORM
 const Sequelize = require('sequelize');
 
-var Quiz = require("./quiz");
 
-exports.Quiz=Quiz;
 
 
 // To use SQLite data base:
-//    DATABASE_URL = sqlite:quiz.sqlite
+//    DATABASE_URL = sqlite:quizzes.sqlite
 // To use  Heroku Postgres data base:
 //    DATABASE_URL = postgres://user:passwd@host:port/database
 

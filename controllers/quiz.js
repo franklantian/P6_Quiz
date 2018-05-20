@@ -1,6 +1,7 @@
 const Sequelize = require("sequelize");
 const {models} = require("../models");
 
+
 // Autoload the quiz with id equals to :quizId
 exports.load = (req, res, next, quizId) => {
 
@@ -20,7 +21,7 @@ exports.load = (req, res, next, quizId) => {
 // GET /quizzes
 exports.index = (req, res, next) => {
 
-    models.quiz.findAll()
+    models.quiz.find
     .then(quizzes => {
         res.render('quizzes/index.ejs', {quizzes});
     })
@@ -159,26 +160,52 @@ exports.check = (req, res, next) => {
 //GET quizzes/randomplay
 exports.randomplay = (req, res, next) => {
 
-    const {quiz, query} = req;
 
-    const answer = query.answer || '';
 
-    res.render('quizzes/play', {
-        quiz,
-        answer
-    });
+    //Si quiz no definida en sesscion,desde 0
+    if(req.session.quizzes === undefined) {
+        res.session.nota = 0;
+
+        models.quiz.findAll()
+            .then(quiz => {
+                req.session.quizzes = quiz;
+                req.session.sid = Math.floor(Math.random() * toBeResolved.length);
+                res.render('quizzes/randomplay', {
+                    quiz: req.session.quizzes[req.session.sid],
+                    score: req.session.nota
+                });
+
+            })
+    }
+    //jugar hasta hay falle.
+    else {
+
+        req.session.sid = Math.floor(Math.random() * toBeResolved.length);
+        res.render('quizzes/randomplay', {
+            quiz: req.session.quizzes[req.session.sid],
+            score: req.session.nota
+        });
+
+    }
+
+
+
+
 };
 
 exports.randomcheck = (req, res, next) => {
+    let result = false;
 
-    const {quiz, query} = req;
+    models.quiz.find
 
-    const answer = query.answer || "";
-    const result = answer.toLowerCase().trim() === quiz.answer.toLowerCase().trim();
 
-    res.render('quizzes/result', {
-        quiz,
-        result,
-        answer
-    });
+
+};
+
+trimm = rl => {
+    rl = rl.replace(/\s+/g,"");
+    rl = rl.toUpperCase();
+    rl = rl.toLowerCase();
+    rl = rl.trim();
+    return rl;
 };
