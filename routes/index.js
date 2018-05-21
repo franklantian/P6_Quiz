@@ -9,10 +9,6 @@ const quizController = require('../controllers/quiz');
 router.get('/', (req, res, next) => {
   res.render('index');
 });
-//proyecto I
-router.get('/quizzes/randomplay', quizController.randomplay);
-
-router.get('/quizzes/randomcheck/:quizId(\\d+)', quizController.randomcheck);
 
 
 // Author page.
@@ -23,6 +19,12 @@ router.get('/author', (req, res, next) => {
 
 // Autoload for routes using :quizId
 router.param('quizId', quizController.load);
+
+//proyecto I
+router.get('/quizzes/randomplay', quizController.randomplay);
+
+router.get('/quizzes/randomcheck/:Idofquit(\\d+)', quizController.randomcheck);
+
 
 
 // Crud de quizzes

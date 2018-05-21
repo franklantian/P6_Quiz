@@ -162,27 +162,27 @@ exports.randomplay = (req, res, next) => {
 
 
 
-    //Si quiz no definida en sesscion,desde 0
+    //Si session es vacio,desde 0
     if(req.session.randomplay === undefined) {
         req.session.nota = 0;
 
         models.quiz.findAll()
             .then(quiz => {
                 req.session.randomplay = quiz;
-                req.session.id = Math.floor(Math.random()*req.session.randomplay.length);
+                req.session.idofquiz = Math.floor(Math.random()*req.session.randomplay.length);
                 res.render('quizzes/random_play', {
-                    quiz: req.session.randomplay[req.session.id],
+                    quiz : req.session.randomplay[req.session.idofquiz],
                     score: req.session.nota
                 });
 
             })
     }
-    //jugar hasta hay falle.
+    //Ya exite alguna quiz en session.
     else {
 
-        req.session.id = Math.floor(Math.random() * req.session.randomplay.length);
+        req.session.idofquiz = Math.floor(Math.random()*req.session.randomplay.length);
         res.render('quizzes/random_play', {
-            quiz: req.session.randomplay[req.session.id],
+            quiz: req.session.randomplay[req.session.idofquiz],
             score: req.session.nota
         });
 
@@ -199,37 +199,37 @@ exports.randomcheck = (req, res, next) => {
 
 
 
-    if(trimm(req.query.answer) === trimm(req.session.randomplay[req.session.id]).answer){
+    if(trimm(req.query.answer) === trimm(req.session.randomplay[req.session.idofquiz]).answer){
         req.session.nota++;
         nota = req.session.nota;
         result = true;
-        req.session.randomplay.splice(req.session.id, 1);
+        req.session.randomplay.splice(req.session.idofquiz, 1);
 
 
-        if(req.session.randomplay === undefined) {
-            req.session.randomplay.splice(0, req.session.randomplay.length);
-            //exito
-            res.render('quizzes/random_nomore', {
-                score: req.session.nota
-            });
+        if(req.session.randomplay.length === 0) {
+
+                    res.render('quizzes/random_nomore', {
+                        score: req.session.nota
+                    });
+
+
         }
         else{
                 res.render('quizzes/random_result', {
                     score: nota,
                     result: result,
-                    answer: req.session.randomplay[req.session.id].answer
+                    answer: req.session.randomplay[req.session.idofquiz].answer
                 });
         }
     }
     else{
         nota = req.session.nota;
         res.session.nota = 0;
-        res.session.randomplay.splice(0, res.session.randomplay.length);
 
         res.render('quizzes/random_result', {
             score: nota,
             result: result,
-            answer: req.session.randomplay[req.session.id].answer
+            answer: req.query.answer
         });
     }
 
