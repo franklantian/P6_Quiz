@@ -10,15 +10,9 @@ router.get('/', (req, res, next) => {
   res.render('index');
 });
 //proyecto I
-router.get('/quizzes',function(req, res, next) {
+router.get('/quizzes/randomplay', quizController.randomplay);
 
-    res.render('quizzes/randomplay', quizController.randomplay);
-});
-
-router.get('/quizzes',function(req, res, next) {
-
-    res.render('quizzes/randomcheck/:quizId?answer=respuesta', quizController.randomcheck);
-});
+router.get('/quizzes/randomcheck/:quizId(\\d+)', quizController.randomcheck);
 
 
 // Author page.
