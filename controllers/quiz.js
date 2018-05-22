@@ -156,42 +156,49 @@ exports.check = (req, res, next) => {
 };
 
 
-//Practica6 randomplay al azar una pregunta en BBDD,sin repetir la pregunta.
-//GET quizzes/randomplay
+//Practica6 play1 al azar una pregunta en BBDD,sin repetir la pregunta.
+//GET quizzes/play1
 exports.randomplay = (req, res, next) => {
 
 
 
     //Si session es vacio,desde 0
-    if(req.session.randomplay === undefined) {
+    if (req.session.play1 === undefined) {
         req.session.nota = 0;
 
         models.quiz.findAll()
             .then(quiz => {
-                req.session.randomplay = quiz;
-                req.session.idofquiz = Math.floor(Math.random()*req.session.randomplay.length);
-                res.render('quizzes/random_play', {
-                    quiz : req.session.randomplay[req.session.idofquiz],
-                    score: req.session.nota
-                });
-
+                req.session.play1 = quiz;
+                req.session.idofquiz = Math.floor(Math.random() * quiz.length);
             })
+            .then(() => {
+                res.render('quizzes/random_play', {
+                    quiz: req.session.play1[req.session.idofquiz],
+                    score: req.session.nota
+                })
+            })
+            .catch(error => {
+                next(error);
+            });
+
     }
     //Ya exite alguna quiz en session.
     else {
+        req.session.idofquiz = Math.floor(Math.random() * req.session.play1.length);
+        models.quiz.findById(req.session.idofquiz)
+            .then(quiz=> {
+                res.render('quizzes/random_play', {
+                    quiz: quiz,
+                    score: req.session.nota
+                })
+            })
+            .catch(error => {
+                next(error);
+            });
 
-        req.session.idofquiz = Math.floor(Math.random()*req.session.randomplay.length);
-        res.render('quizzes/random_play', {
-            quiz: req.session.randomplay[req.session.idofquiz],
-            score: req.session.nota
-        });
 
-    }
-
-
-
-
-};
+    };
+}
 
 exports.randomcheck = (req, res, next) => {
     let result = false;
@@ -199,28 +206,30 @@ exports.randomcheck = (req, res, next) => {
 
 
 
-    if(trimm(req.query.answer) === trimm(req.session.randomplay[req.session.idofquiz]).answer){
-        req.session.nota++;
-        nota = req.session.nota;
-        result = true;
-        req.session.randomplay.splice(req.session.idofquiz, 1);
+    if(trimm(req.query.answer) === trimm(req.session.play1[req.session.idofquiz].answer)){
+
+                req.session.nota++;
+                nota = req.session.nota;
+                result = true;
+                req.session.play1.splice(req.session.idofquiz, 1);
 
 
-        if(req.session.randomplay.length === 0) {
+                if(req.session.play1.length === 0) {
 
                     res.render('quizzes/random_nomore', {
                         score: req.session.nota
                     });
 
 
-        }
-        else{
-                res.render('quizzes/random_result', {
-                    score: nota,
-                    result: result,
-                    answer: req.session.randomplay[req.session.idofquiz].answer
-                });
-        }
+                }
+                else{
+                    res.render('quizzes/random_result', {
+                        score: nota,
+                        result: result,
+                        answer: req.session.play1[req.session.idofquiz].answer
+                    });
+                }
+
     }
     else{
         nota = req.session.nota;
@@ -237,10 +246,10 @@ exports.randomcheck = (req, res, next) => {
 
 };
 
-trimm = rl => {
-    rl = rl.replace(/\s+/g,"");
-    rl = rl.toUpperCase();
-    rl = rl.toLowerCase();
-    rl = rl.trim();
-    return rl;
+trimm = txt => {
+    txt = txt.replace(/\s+/g, '');
+    //txt = txt.toUpperCase();
+    txt = txt.toLowerCase();
+    txt = txt.trim();
+    return txt;
 };
