@@ -102,7 +102,6 @@ router.get('/quizzes/randomcheck/:Idofquit(\\d+)', quizController.randomcheck);
 
 
 
-<<<<<<< HEAD
 // Routes for the resource /quizzes
 router.get('/quizzes',
 	quizController.index);
@@ -126,16 +125,6 @@ router.delete('/quizzes/:quizId(\\d+)',
     sessionController.loginRequired,
     quizController.adminOrAuthorRequired,
 	quizController.destroy);
-=======
-// Crud de quizzes
-router.get('/quizzes',                     quizController.index);
-router.get('/quizzes/:quizId(\\d+)',       quizController.show);
-router.get('/quizzes/new',                 quizController.new);
-router.post('/quizzes',                    quizController.create);
-router.get('/quizzes/:quizId(\\d+)/edit',  quizController.edit);
-router.put('/quizzes/:quizId(\\d+)',       quizController.update);
-router.delete('/quizzes/:quizId(\\d+)',    quizController.destroy);
->>>>>>> 7872481
 
 //Jugar de quizzes.
 router.get('/quizzes/:quizId(\\d+)/play',  quizController.play);

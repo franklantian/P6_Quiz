@@ -2,10 +2,7 @@ const Sequelize = require("sequelize");
 const Op = Sequelize.Op;
 const {models} = require("../models");
 
-<<<<<<< HEAD
 const paginate = require('../helpers/paginate').paginate;
-=======
->>>>>>> 7872481
 
 // Autoload the quiz with id equals to :quizId
 exports.load = (req, res, next, quizId) => {

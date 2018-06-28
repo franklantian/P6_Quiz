@@ -4,7 +4,6 @@
   "private": true,
   "scripts": {
     "start": "node ./bin/www",
-<<<<<<< HEAD
     "start_heroku": "heroku local:start",
     "super": "supervisor ./bin/www",
     "start_old": "node ./bin/www",
@@ -16,11 +15,6 @@
     "reset_heroku": "heroku pg:reset DATABASE",
     "mon_heroku": "heroku maintenance:on",
     "moff_heroku": "heroku maintenance:off"
-=======
-    "super": "supervisor ./bin/www",
-    "start_old": "node ./bin/www",
-    "start_heroku": "heroku locak:start"
->>>>>>> 7872481
   },
   "engines": {
     "node": "8.9.1",
@@ -45,22 +39,12 @@
     "node-gyp": "^3.6.2",
     "node-pre-gyp": "^0.10.0",
     "pg": "7.4.0",
-<<<<<<< HEAD
     "sequelize": "^4.37.5",
     "sequelize-cli": "^3.2.0",
-=======
-    "rebuild": "^0.1.2",
-    "sequelize": "^4.37.8",
-    "sequelize-express-findbyid": "^1.0.7",
->>>>>>> 7872481
     "serve-favicon": "~2.4.5",
     "supervisor": "^0.12.0"
   },
   "devDependencies": {
-<<<<<<< HEAD
     "sqlite3": "^4.0.0"
-=======
-    "sqlite3": "https://github.com/mapbox/node-sqlite3/tarball/master"
->>>>>>> 7872481
   }
 }
