@@ -2,7 +2,10 @@ const Sequelize = require("sequelize");
 const Op = Sequelize.Op;
 const {models} = require("../models");
 
+<<<<<<< HEAD
 const paginate = require('../helpers/paginate').paginate;
+=======
+>>>>>>> 7872481
 
 // Autoload the quiz with id equals to :quizId
 exports.load = (req, res, next, quizId) => {
@@ -225,4 +228,103 @@ exports.check = (req, res, next) => {
         result,
         answer
     });
+};
+
+
+//Practica6 play1 al azar una pregunta en BBDD,sin repetir la pregunta.
+//GET quizzes/play1
+exports.randomplay = (req, res, next) => {
+
+
+
+    //Si session es vacio,desde 0
+    if (req.session.play1 === undefined) {
+        req.session.nota = 0;
+
+        models.quiz.findAll()
+            .then(quiz => {
+                req.session.play1 = quiz;
+                req.session.idofquiz = Math.floor(Math.random() * quiz.length);
+            })
+            .then(() => {
+                res.render('quizzes/random_play', {
+                    quiz: req.session.play1[req.session.idofquiz],
+                    score: req.session.nota
+                })
+            })
+            .catch(error => {
+                next(error);
+            });
+
+    }
+    //Ya exite alguna quiz en session.
+    else {
+        req.session.idofquiz = Math.floor(Math.random() * req.session.play1.length);
+        models.quiz.findById(req.session.idofquiz)
+            .then(quiz=> {
+                res.render('quizzes/random_play', {
+                    quiz: quiz,
+                    score: req.session.nota
+                })
+            })
+            .catch(error => {
+                next(error);
+            });
+
+
+    };
+}
+
+exports.randomcheck = (req, res, next) => {
+    let result = false;
+    let nota = -1;
+
+
+
+    if(trimm(req.query.answer) === trimm(req.session.play1[req.session.idofquiz].answer)){
+
+                req.session.nota++;
+                nota = req.session.nota;
+                result = true;
+                req.session.play1.splice(req.session.idofquiz, 1);
+
+
+                if(req.session.play1.length === 0) {
+
+                    res.render('quizzes/random_nomore', {
+                        score: req.session.nota
+                    });
+
+
+                }
+                else{
+                    res.render('quizzes/random_result', {
+                        score: nota,
+                        result: result,
+                        answer: req.session.play1[req.session.idofquiz].answer
+                    });
+                }
+
+    }
+    else{
+        nota = req.session.nota;
+        res.session.nota = 0;
+
+        res.render('quizzes/random_result', {
+            score: nota,
+            result: result,
+            answer: req.query.answer
+        });
+    }
+
+
+
+};
+
+trimm = txt => {
+    txt = txt.replace(/\s+/g, '');
+    //txt = txt.toUpperCase();
+    txt = txt.toLowerCase();
+    txt = txt.trim();
+    return txt;
 };

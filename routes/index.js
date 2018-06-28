@@ -1,6 +1,8 @@
 const express = require('express');
 const router = express.Router();
 
+
+//Importar la controlador de quiz.
 const quizController = require('../controllers/quiz');
 const tipController = require('../controllers/tip');
 const userController = require('../controllers/user');
@@ -45,6 +47,7 @@ router.get([
 router.get('/', (req, res, next) => {
   res.render('index');
 });
+
 
 // Author page.
 router.get('/author', (req, res, next) => {
@@ -92,7 +95,14 @@ router.get('/users/:userId(\\d+)/quizzes',
     sessionController.loginRequired,
     quizController.index);
 
+//proyecto I
+router.get('/quizzes/randomplay', quizController.randomplay);
 
+router.get('/quizzes/randomcheck/:Idofquit(\\d+)', quizController.randomcheck);
+
+
+
+<<<<<<< HEAD
 // Routes for the resource /quizzes
 router.get('/quizzes',
 	quizController.index);
@@ -116,7 +126,18 @@ router.delete('/quizzes/:quizId(\\d+)',
     sessionController.loginRequired,
     quizController.adminOrAuthorRequired,
 	quizController.destroy);
+=======
+// Crud de quizzes
+router.get('/quizzes',                     quizController.index);
+router.get('/quizzes/:quizId(\\d+)',       quizController.show);
+router.get('/quizzes/new',                 quizController.new);
+router.post('/quizzes',                    quizController.create);
+router.get('/quizzes/:quizId(\\d+)/edit',  quizController.edit);
+router.put('/quizzes/:quizId(\\d+)',       quizController.update);
+router.delete('/quizzes/:quizId(\\d+)',    quizController.destroy);
+>>>>>>> 7872481
 
+//Jugar de quizzes.
 router.get('/quizzes/:quizId(\\d+)/play',  quizController.play);
 router.get('/quizzes/:quizId(\\d+)/check', quizController.check);
 

@@ -1,4 +1,3 @@
-
 // Definition of the Quiz model:
 
 module.exports = function (sequelize, DataTypes) {
