@@ -3,7 +3,8 @@
   "version": "0.0.0",
   "private": true,
   "scripts": {
-    "start": "heroku local:start",
+    "start": "node ./bin/www",
+    "start_heroku": "heroku local:start",
     "super": "supervisor ./bin/www",
     "start_old": "node ./bin/www",
     "migrate_local": "sequelize db:migrate --url sqlite://$(pwd)/quiz.sqlite",
@@ -33,11 +34,11 @@
     "morgan": "~1.9.0",
     "pg": "7.4.0",
     "sequelize": "^4.37.5",
-    "sequelize-cli": "^4.0.0",
+    "sequelize-cli": "^3.2.0",
     "serve-favicon": "~2.4.5",
     "supervisor": "^0.12.0"
   },
   "devDependencies": {
-    "sqlite3": "^3.1.13"
+    "sqlite3": "^4.0.0"
   }
 }
