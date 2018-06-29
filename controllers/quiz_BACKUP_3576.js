@@ -20,14 +20,15 @@ exports.load = (req, res, next, quizId) => {
 
     const options = {
         include: [
-
+<<<<<<< HEAD
             models.tip,
             models.attachment,
             {model: models.user, as: 'author'}
-
+=======
             {model: models.user, as: 'author'},
             {model: models.tip,
                 include: [{model: models.user, as: 'tipHost'}]}
+>>>>>>> practica7
         ]
     };
 
